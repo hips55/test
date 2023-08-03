@@ -12,8 +12,8 @@ pipeline {
                 sh '''
                     echo "FROM ubuntu" > Dockerfile
                     echo "RUN apt update" >> Dockerfile
-                    echo "RUN apt install –y apache2" >> Dockerfile
-                    echo "RUN apt install –y apache2-utils" >> Dockerfile
+                    echo "RUN apt install -y apache2" >> Dockerfile
+                    echo "RUN apt install -y apache2-utils" >> Dockerfile
                     echo "RUN apt clean" >> Dockerfile
                     echo "EXPOSE 80" >> Dockerfile
                     echo 'CMD [ “apache2ctl”, “-D”, “FOREGROUND”]' >> Dockerfile
