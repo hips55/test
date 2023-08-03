@@ -23,15 +23,15 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+                sh 'sudo docker build -t $IMAGE_NAME:$IMAGE_TAG .'
             }
         }
         stage('Push') {
             steps {
                 withAWS(region: "$AWS_REGION", credentials: 'aws-credentials') {
-                    sh "eval \$(aws ecr get-login --no-include-email --region $AWS_REGION)"
-                    sh "docker tag $IMAGE_NAME:$IMAGE_TAG $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG"
-                    sh "docker push $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG"
+                    sh "sudo eval \$(aws ecr get-login --no-include-email --region $AWS_REGION)"
+                    sh "sudo docker tag $IMAGE_NAME:$IMAGE_TAG $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG"
+                    sh "sudo docker push $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG"
                 }
             }
         }
