@@ -28,8 +28,8 @@ pipeline {
         }
         stage('Push') {
             steps {
-                    sh 'docker tag $IMAGE_NAME:$IMAGE_TAG $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG'
-                    sh 'docker push $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG'
+                    sh 'docker tag $IMAGE_NAME:$IMAGE_TAG public.ecr.aws/t6r5u3y4/$IMAGE_NAME:$IMAGE_TAG'
+                    sh 'docker push public.ecr.aws/t6r5u3y4/$IMAGE_NAME:$IMAGE_TAG'
                 }
             }
         }
