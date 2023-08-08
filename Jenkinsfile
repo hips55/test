@@ -23,14 +23,15 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+                sh 'docker build -t 352264280014.dkr.ecr.ap-northeast-2.amazonaws.com/test .'
             }
         }
         stage('Push') {
-            steps {
-                    sh 'docker tag $IMAGE_NAME:$IMAGE_TAG public.ecr.aws/t6r5u3y4/$IMAGE_NAME:$IMAGE_TAG'
-                    sh 'docker push public.ecr.aws/t6r5u3y4/$IMAGE_NAME:$IMAGE_TAG'
-                }
+            steps {docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:AWSCredentials") {
+                            def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_NUMBER}")
+                            image.push()
+                        }
+                            }
             }
         }
     }
