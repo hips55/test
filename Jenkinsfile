@@ -71,7 +71,7 @@ pipeline {
         stage('Deploy HTML') {
             steps {
                 sh '''
-                    docker exec -i $(docker ps -q) sh -c "echo '<html><body><h1>CI/CD 성공!!</h1></body></html>' > /var/www/html/index.html"
+                    docker exec -i $(docker ps -q) sh -c "echo '<html><body><h1>FreshSales</h1></body></html>' > /var/www/html/index.html"
                 '''
             }
         }
