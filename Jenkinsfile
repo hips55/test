@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script{
                     try{
-                        docker.withRegistry("https://${ECR_PATH}", "ecr:${AWS_REGION}:AWSCredentials") {
+                        docker.withRegistry("https://${ECR_PATH}", "ecr:${AWS_REGION}:aws-credentials") {
                             def image = docker.build("${ECR_PATH}/${IMAGE_NAME}:${env.BUILD_NUMBER}")
                             image.push()
                         }
@@ -46,6 +46,11 @@ pipeline {
                         currentBuild.result = 'FAILURE'
                     }
                 }
+            }
+        }
+        stage('Run') {
+            steps {
+                sh 'docker run -d -p 80:80 ${ECR_PATH}/${IMAGE_NAME}:${IMAGE_TAG}'
             }
         }
     }
