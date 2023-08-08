@@ -17,7 +17,7 @@ pipeline {
                     echo "RUN apt install -y apache2-utils" >> Dockerfile
                     echo "RUN apt clean" >> Dockerfile
                     echo "EXPOSE 80" >> Dockerfile
-                    echo 'CMD [ “apache2ctl”, “-D”, “FOREGROUND”]' >> Dockerfile
+                    echo 'CMD [ "apache2ctl", "-D", "FOREGROUND"]' >> Dockerfile
                 '''
             }
         }
