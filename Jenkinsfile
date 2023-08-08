@@ -27,12 +27,30 @@ pipeline {
             }
         }
         stage('Push') {
-            steps {docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:AWSCredentials") {
+            steps {
+script{
+try{
+docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:AWSCredentials") {
                             def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_NUMBER}")
                             image.push()
                         }
-                            }
+ echo 'Remove Deploy Files'
+                        sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
+                        env.dockerBuildResult=true
+                    } catch (error) {
+                        print(error)
+                        echo 'Remove Deploy Files'
+                        sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
+                        env.dockerBuildResult=false
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
             }
         }
     }
+
+                           
+            
+        
+    
 
