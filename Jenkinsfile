@@ -29,20 +29,20 @@ pipeline {
         }
         stage('Push') {
             steps {
-                script{
-                    try{
+                script {
+                    try {
                         docker.withRegistry("https://${ECR_PATH}", "ecr:${AWS_REGION}:aws-credentials") {
                             def image = docker.build("${ECR_PATH}/${IMAGE_NAME}:${env.BUILD_NUMBER}")
                             image.push()
                         }
                         echo 'Remove Deploy Files'
                         sh "rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
-                        env.dockerBuildResult=true
+                        env.dockerBuildResult = true
                     } catch (error) {
                         print(error)
                         echo 'Remove Deploy Files'
-                        sh " rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
-                        env.dockerBuildResult=false
+                        sh "rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
+                        env.dockerBuildResult = false
                         currentBuild.result = 'FAILURE'
                     }
                 }
@@ -51,6 +51,13 @@ pipeline {
         stage('Run') {
             steps {
                 sh 'docker run -d -p 80:80 ${ECR_PATH}/${IMAGE_NAME}:${IMAGE_TAG}'
+            }
+        }
+        stage('Deploy HTML') {
+            steps {
+                sh '''
+                    docker exec -i $(docker ps -q) sh -c "echo '<html><body><h1>Hello, World!</h1></body></html>' > /var/www/html/index.html"
+                '''
             }
         }
     }
