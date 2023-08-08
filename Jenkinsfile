@@ -6,6 +6,7 @@ pipeline {
         IMAGE_NAME = 'test'
         IMAGE_TAG = 'latest'
         ECR_PATH = "${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        CONTAINER_PORT = 8080 // 변경 가능한 포트 번호 입력
     }
     stages {
         stage('Create Dockerfile') {
@@ -48,9 +49,16 @@ pipeline {
                 }
             }
         }
+        stage('Stop and Remove Previous Container') {
+            steps {
+                sh 'docker stop $(docker ps -q) && docker rm $(docker ps -a -q)'
+            }
+        }
         stage('Run') {
             steps {
-                sh 'docker run -d -p 80:80 ${ECR_PATH}/${IMAGE_NAME}:${IMAGE_TAG}'
+                script {
+                    sh "docker run -d -p ${CONTAINER_PORT}:80 ${ECR_PATH}/${IMAGE_NAME}:${IMAGE_TAG}"
+                }
             }
         }
         stage('Deploy HTML') {
