@@ -51,7 +51,14 @@ pipeline {
         }
         stage('Stop and Remove Previous Container') {
             steps {
-                sh 'docker stop $(docker ps -q) && docker rm $(docker ps -a -q)'
+                script {
+                    def existingContainers = sh(script: 'docker ps -q', returnStdout: true).trim()
+                    if (existingContainers) {
+                        sh 'docker stop $(docker ps -q) && docker rm $(docker ps -a -q)'
+                    } else {
+                        echo 'No existing containers to stop and remove.'
+                    }
+                }
             }
         }
         stage('Run') {
