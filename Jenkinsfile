@@ -2,12 +2,13 @@ pipeline {
     agent any
     environment {
         AWS_ACCOUNT = '352264280014'
-        AWS_REGION = 'ap-northeat-2'
+        AWS_REGION = 'ap-northeast-2'
         IMAGE_NAME = 'test'
         IMAGE_TAG = 'latest'
+        ECR_PATH = "${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com"
     }
     stages {
-	stage('Create Dockerfile') {
+        stage('Create Dockerfile') {
             steps {
                 sh '''
                     echo "FROM ubuntu" > Dockerfile
@@ -23,18 +24,18 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t 352264280014.dkr.ecr.ap-northeast-2.amazonaws.com/test .'
+                sh 'docker build -t ${ECR_PATH}/${IMAGE_NAME}:${IMAGE_TAG} .'
             }
         }
         stage('Push') {
             steps {
-script{
-try{
-docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:AWSCredentials") {
-                            def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_NUMBER}")
+                script{
+                    try{
+                        docker.withRegistry("https://${ECR_PATH}", "ecr:${AWS_REGION}:aws-credentials") {
+                            def image = docker.build("${ECR_PATH}/${IMAGE_NAME}:${env.BUILD_NUMBER}")
                             image.push()
                         }
- echo 'Remove Deploy Files'
+                        echo 'Remove Deploy Files'
                         sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
                         env.dockerBuildResult=true
                     } catch (error) {
@@ -48,9 +49,5 @@ docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:AWSCredentials") {
             }
         }
     }
-
-                           
-            
-        
-    
+}
 
