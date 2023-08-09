@@ -18,7 +18,7 @@ pipeline {
         stage('Build PetClinic') {
             steps {
                 sh 'git clone https://github.com/spring-projects/spring-petclinic.git'
-                sh 'cd spring-petclinic && ./mvnw package'
+                sh 'cd spring-petclinic && ./mvnw clean package'
             }
         }
 
@@ -43,7 +43,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        docker.withRegistry("https://${ECR_PATH}", "ecr:${AWS_REGION}:aws-credentials") {
+                        docker.withRegistry("https://${ECR_PATH}", "ecr:${AWS_REGION}:AWSCredentials") {
                             def image = docker.build("${ECR_PATH}/${IMAGE_NAME}:${env.BUILD_NUMBER}")
                             image.push()
                         }
