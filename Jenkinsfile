@@ -9,6 +9,12 @@ pipeline {
         CONTAINER_PORT = 8080
     }
     stages {
+        stage('Clean Workspace') {
+            steps {
+                sh "rm -rf spring-petclinic"
+            }
+        }
+
         stage('Build PetClinic') {
             steps {
                 sh 'git clone https://github.com/spring-projects/spring-petclinic.git'
