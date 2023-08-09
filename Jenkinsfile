@@ -3,7 +3,7 @@ pipeline {
     environment {
         AWS_ACCOUNT = '352264280014'
         AWS_REGION = 'ap-northeast-2'
-        IMAGE_NAME = 'petclinic'
+        IMAGE_NAME = 'test'
         IMAGE_TAG = 'latest'
         ECR_PATH = "${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com"
         CONTAINER_PORT = 8080
