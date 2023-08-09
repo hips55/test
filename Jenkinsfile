@@ -25,7 +25,7 @@ pipeline {
         stage('Create Dockerfile') {
             steps {
                 sh '''
-                    echo "FROM openjdk:11-jre-slim" > Dockerfile
+                    echo "FROM openjdk:17-jre-slim" > Dockerfile
                     echo "COPY spring-petclinic/target/*.jar /app.jar" >> Dockerfile
                     echo "EXPOSE ${CONTAINER_PORT}" >> Dockerfile
                     echo 'CMD ["java", "-jar", "/app.jar"]' >> Dockerfile
