@@ -77,7 +77,7 @@ pipeline {
         stage('Run') {
             steps {
                 script {
-                    sh "docker run -d -p ${CONTAINER_PORT}:${CONTAINER_PORT} ${ECR_PATH}/${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker run -d -p 80:${CONTAINER_PORT} ${ECR_PATH}/${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
