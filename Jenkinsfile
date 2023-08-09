@@ -3,22 +3,26 @@ pipeline {
     environment {
         AWS_ACCOUNT = '352264280014'
         AWS_REGION = 'ap-northeast-2'
-        IMAGE_NAME = 'test'
+        IMAGE_NAME = 'petclinic'
         IMAGE_TAG = 'latest'
         ECR_PATH = "${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-        CONTAINER_PORT = 8080 // 변경 가능한 포트 번호 입력
+        CONTAINER_PORT = 8080
     }
     stages {
+        stage('Build PetClinic') {
+            steps {
+                sh 'git clone https://github.com/spring-projects/spring-petclinic.git'
+                sh 'cd spring-petclinic && ./mvnw package'
+            }
+        }
+
         stage('Create Dockerfile') {
             steps {
                 sh '''
-                    echo "FROM ubuntu" > Dockerfile
-                    echo "RUN apt update" >> Dockerfile
-                    echo "RUN apt install -y apache2" >> Dockerfile
-                    echo "RUN apt install -y apache2-utils" >> Dockerfile
-                    echo "RUN apt clean" >> Dockerfile
-                    echo "EXPOSE 80" >> Dockerfile
-                    echo 'CMD [ "apache2ctl", "-D", "FOREGROUND"]' >> Dockerfile
+                    echo "FROM openjdk:11-jre-slim" > Dockerfile
+                    echo "COPY spring-petclinic/target/*.jar /app.jar" >> Dockerfile
+                    echo "EXPOSE ${CONTAINER_PORT}" >> Dockerfile
+                    echo 'CMD ["java", "-jar", "/app.jar"]' >> Dockerfile
                 '''
             }
         }
@@ -28,6 +32,7 @@ pipeline {
                 sh 'docker build -t ${ECR_PATH}/${IMAGE_NAME}:${IMAGE_TAG} .'
             }
         }
+
         stage('Push') {
             steps {
                 script {
@@ -49,6 +54,7 @@ pipeline {
                 }
             }
         }
+
         stage('Stop and Remove Previous Container') {
             steps {
                 script {
@@ -61,17 +67,19 @@ pipeline {
                 }
             }
         }
+
         stage('Run') {
             steps {
                 script {
-                    sh "docker run -d -p 80:80 ${ECR_PATH}/${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker run -d -p ${CONTAINER_PORT}:${CONTAINER_PORT} ${ECR_PATH}/${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
+
         stage('Deploy HTML') {
             steps {
                 sh '''
-                    docker exec -i $(docker ps -q) sh -c "echo '<html><body><h1>FreshSales</h1></body></html>' > /var/www/html/index.html"
+                    docker exec -i $(docker ps -q) sh -c "echo '<html><body><h1>PetClinic</h1></body></html>' > /app.html"
                 '''
             }
         }
