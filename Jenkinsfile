@@ -105,11 +105,10 @@ spec:
 """
  
         sh '''
-    	git config --global --edit
-	git commit --amend --resest-author
+	git remote set-url origin https://hips55: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@githib.com/hips55/test.git
         git add deploy.yaml
         git commit -m 'yaml for deploy'
-        git push https://github.com/hips55/test.git main
+        git push -u origin main
         '''
       }
     }
