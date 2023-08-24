@@ -105,9 +105,11 @@ spec:
 """
  
         sh '''
+    	git config --global --edit
+	git commit --amend --resest-author
         git add deploy.yaml
         git commit -m 'yaml for deploy'
-        git push https://hyeonsik@github.com/hips55/test.git main
+        git push https://github.com/hips55/test.git main
         '''
       }
     }
