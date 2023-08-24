@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+	gitCredential = credentials('hyeonsik')
         AWS_ACCOUNT = '213899591783'
         AWS_REGION = 'ap-northeast-2'
         IMAGE_NAME = 'jenkins-hhs'
@@ -107,7 +108,7 @@ spec:
         sh '''
         git add deploy.yaml
         git commit -m 'yaml for deplo1y'
-        git push https://credentials('hyeonsik')@github.com/hips55/test.git main
+        git push https://gitCredential@github.com/hips55/test.git main
         '''
       }
     }
