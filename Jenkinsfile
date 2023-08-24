@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        AWS_ACCOUNT = '352264280014'
+        AWS_ACCOUNT = '2138995591783'
         AWS_REGION = 'ap-northeast-2'
         IMAGE_NAME = 'test'
         IMAGE_TAG = 'latest'
