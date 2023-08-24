@@ -63,7 +63,7 @@ pipeline {
 
  stage('Push Yaml'){
       steps {
-        git url: 'https://github.com/hips55/test.git', branch: "main"
+        git url: 'https://github.com/hips55/test.git', branch: "main" , credentialsId: 'hyeonsik'
         
         sh """
         #!/bin/bash
