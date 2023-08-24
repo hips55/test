@@ -63,7 +63,7 @@ pipeline {
 
  stage('Push Yaml'){
       steps {
-        git url: 'https://github.com/hips55/test.git', branch: "main" , credentialsId: 'hyeonsik'
+        git url: 'https://github.com/hips55/test.git', branch: "main" , credentialsId: 'hyeonsik2'
         
         sh """
         #!/bin/bash
@@ -83,7 +83,7 @@ spec:
         app: was
     spec:
       containers:
-      - image: ${AWS_ACCOUNT}.dkr.ecr.ap-northeast-2.amazonaws.com/${ECR_IMAGE}:${env.BUILD_NUMBER}
+      - image: ${AWS_ACCOUNT}.dkr.ecr.ap-northeast-2.amazonaws.com/${IMAGE_NAME}:${env.BUILD_NUMBER}
         name: petclinic
         ports:
         - name: http
@@ -111,13 +111,6 @@ spec:
         '''
       }
     }
-        stage('Deploy HTML') {
-            steps {
-                sh '''
-                    docker exec -i $(docker ps -q) sh -c "echo '<html><body><h1>PetClini12c</h1></body></html>' > /app.html"
-                '''
-            }
-        }
     }
 }
 
