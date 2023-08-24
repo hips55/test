@@ -105,7 +105,7 @@ spec:
 """
  
         sh '''
-        git remote set-url origin git@github.com:hips55/test.git
+        git remote set-url origin https://github.com/hips55/test.git
         git add deploy.yaml
         git commit -m 'yaml for deploy'
         git push -u origin  main
