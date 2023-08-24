@@ -61,27 +61,56 @@ pipeline {
             }
         }
 
-        stage('Stop and Remove Previous Container') {
-            steps {
-                script {
-                    def existingContainers = sh(script: 'docker ps -q', returnStdout: true).trim()
-                    if (existingContainers) {
-                        sh 'docker stop $(docker ps -q) && docker rm $(docker ps -a -q)'
-                    } else {
-                        echo 'No existing containers to stop and remove.'
-                    }
-                }
-            }
-        }
-
-        stage('Run') {
-            steps {
-                script {
-                    sh "docker run -d -p 80:${CONTAINER_PORT} ${ECR_PATH}/${IMAGE_NAME}:${IMAGE_TAG}"
-                }
-            }
-        }
-
+ stage('Push Yaml'){
+      steps {
+        git url: 'https://github.com/hips55/test.git', branch: "main"
+        
+        sh """
+        #!/bin/bash
+        cat > deploy.yaml << EOF
+        apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: was
+  template:
+    metadata:
+      labels:
+        app: was
+    spec:
+      containers:
+      - image: ${AWS_ACCOUNT}.dkr.ecr.ap-northeast-2.amazonaws.com/${ECR_IMAGE}:${env.BUILD_NUMBER}
+        name: petclinic
+        ports:
+        - name: http
+          containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: petclinic-service
+spec:
+  selector:
+    app: was
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: NodePort
+"""
+ 
+        sh '''
+        git add deploy.yaml
+        git commit -m 'yaml for deploy'
+        git push origin  main
+        '''
+      }
+    }
         stage('Deploy HTML') {
             steps {
                 sh '''
