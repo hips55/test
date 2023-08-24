@@ -43,7 +43,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        docker.withRegistry("https://${ECR_PATH}", "ecr:${AWS_REGION}:AWSCredentials") {
+                        docker.withRegistry("https://${ECR_PATH}/jenkins-hhs", "ecr:${AWS_REGION}:AWSCredentials") {
                             def image = docker.build("${ECR_PATH}/${IMAGE_NAME}:${env.BUILD_NUMBER}")
                             image.push()
                         }
