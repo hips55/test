@@ -85,7 +85,7 @@ pipeline {
         stage('Deploy HTML') {
             steps {
                 sh '''
-                    docker exec -i $(docker ps -q) sh -c "echo '<html><body><h1>PetClinic</h1></body></html>' > /app.html"
+                    docker exec -i $(docker ps -q) sh -c "echo '<html><body><h1>PetClini12c</h1></body></html>' > /app.html"
                 '''
             }
         }
