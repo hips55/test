@@ -108,7 +108,7 @@ spec:
         sh '''
         git add deploy.yaml
         git commit -m 'yaml for deplo1y'
-        git push https://${gitCredential}@github.com/hips55/test.git main
+        git push https://${gitCredential}@github.com/hips55/argocd.git main
         '''
       }
     }
