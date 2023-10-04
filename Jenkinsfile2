@@ -2,11 +2,10 @@ pipeline {
     agent any
 
     stages {
-        stage('Install Apache') {
+        stage('test-script') {
             steps {
                 sh '''
-                sudo su
-                apt-get install -y apache2
+                touch test.txt
                 '''
             }
         }
